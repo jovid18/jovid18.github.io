@@ -9,7 +9,7 @@ topics:
   - pagination
   - django
   - postgresql
-draft: true
+draft: false
 ---
 
 페이지네이션과 관련된 기능을 개발하던 중 사소한 테크닉을 알게 되어서 글을 작성하게 되었습니다.
