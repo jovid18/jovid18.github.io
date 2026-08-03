@@ -1,0 +1,51 @@
+---
+import { LANGS, LANG_LABELS, type Lang } from "../i18n/taxonomy";
+import { t } from "../i18n/ui";
+
+interface Props {
+  lang: Lang;
+  /** 이 페이지에 대응하는 다른 언어 URL. 없는 언어는 비활성으로 표시된다. */
+  alternates?: Partial<Record<Lang, string>>;
+}
+
+const { lang, alternates = {} } = Astro.props;
+const ui = t(lang);
+---
+
+<div class="lang-switch" data-lang-switch>
+  {
+    LANGS.map((l) => {
+      const label = LANG_LABELS[l];
+      if (l === lang) {
+        return (
+          <span aria-current="true" lang={l}>
+            {label}
+          </span>
+        );
+      }
+      const href = alternates[l];
+      return href ? (
+        <a href={href} lang={l} data-set-lang={l} title={ui.switchTo(label)}>
+          {label}
+        </a>
+      ) : (
+        <span data-missing lang={l} title={ui.translationMissing}>
+          {label}
+        </span>
+      );
+    })
+  }
+</div>
+
+<script>
+  // 언어를 직접 바꿨을 때만 선호를 기록한다. 루트(/)가 다음 방문 때 이 값을 읽는다.
+  document.querySelectorAll<HTMLAnchorElement>("[data-set-lang]").forEach((el) => {
+    el.addEventListener("click", () => {
+      try {
+        localStorage.setItem("preferred-lang", el.dataset.setLang!);
+      } catch {
+        /* 프라이빗 모드 등에서 쓰기 실패 — 무시하고 이동만 한다 */
+      }
+    });
+  });
+</script>

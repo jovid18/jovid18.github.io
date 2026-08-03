@@ -1,0 +1,39 @@
+---
+import LangSwitch from "./LangSwitch.astro";
+import { t } from "../i18n/ui";
+import type { Lang } from "../i18n/taxonomy";
+import { localePath } from "../lib/posts";
+
+interface Props {
+  lang: Lang;
+  alternates?: Partial<Record<Lang, string>>;
+}
+
+const { lang, alternates = {} } = Astro.props;
+const ui = t(lang);
+const here = Astro.url.pathname;
+
+const links = [
+  { href: localePath(lang, "blog"), label: ui.nav.posts },
+  { href: localePath(lang, "projects"), label: ui.nav.projects },
+  { href: localePath(lang, "domains"), label: ui.nav.domains },
+  { href: localePath(lang, "topics"), label: ui.nav.topics },
+];
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="site-title" href={localePath(lang)}>{ui.siteTitle}</a>
+    <nav class="site-nav">
+      {
+        links.map((l) => (
+          <a href={l.href} aria-current={here.startsWith(l.href) ? "true" : undefined}>
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+    <span class="header-spacer"></span>
+    <LangSwitch lang={lang} alternates={alternates} />
+  </div>
+</header>

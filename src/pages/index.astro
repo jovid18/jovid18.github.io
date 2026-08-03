@@ -1,0 +1,74 @@
+---
+// 루트는 언어 선택 지점이다.
+// 정적 호스팅(GitHub Pages)에서는 서버 301을 쓸 수 없으므로, 직전에 고른 언어가 있으면
+// 그쪽으로 보내고 없으면 기본 언어로 보낸다. 스크립트가 막힌 환경에서도 링크로 갈 수 있게 남겨둔다.
+import { LANGS, LANG_LABELS } from "../i18n/taxonomy";
+import { UI } from "../i18n/ui";
+
+const DEFAULT_LANG = "ja";
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>jovid18</title>
+    <meta name="description" content={UI.ja.siteDescription} />
+    <link rel="canonical" href={new URL(`/${DEFAULT_LANG}/`, Astro.site)} />
+    {
+      LANGS.map((l) => (
+        <link
+          rel="alternate"
+          hreflang={l === "ja" ? "ja-JP" : "ko-KR"}
+          href={new URL(`/${l}/`, Astro.site)}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(`/${DEFAULT_LANG}/`, Astro.site)} />
+    <noscript>
+      <meta http-equiv="refresh" content={`0; url=/${DEFAULT_LANG}/`} />
+    </noscript>
+    <script is:inline define:vars={{ DEFAULT_LANG }}>
+      var langs = ["ja", "ko"];
+      var pref = null;
+      try {
+        pref = localStorage.getItem("preferred-lang");
+      } catch (e) {
+        /* 접근 불가 — 기본 언어로 간다 */
+      }
+      var target = langs.indexOf(pref) >= 0 ? pref : DEFAULT_LANG;
+      location.replace("/" + target + "/");
+    </script>
+    <style>
+      body {
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        display: grid;
+        place-content: center;
+        min-height: 100vh;
+        margin: 0;
+        gap: 1rem;
+      }
+      ul {
+        display: flex;
+        gap: 1rem;
+        list-style: none;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>jovid18</h1>
+    <ul>
+      {
+        LANGS.map((l) => (
+          <li>
+            <a href={`/${l}/`} lang={l}>
+              {LANG_LABELS[l]}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </body>
+</html>

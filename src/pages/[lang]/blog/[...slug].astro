@@ -1,0 +1,94 @@
+---
+import { getEntry, render } from "astro:content";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { DOMAIN_LABELS, POST_TYPE_LABELS, LANGS, type Lang } from "../../../i18n/taxonomy";
+import { t } from "../../../i18n/ui";
+import { formatDate, getLangsForSlug, getPosts, localePath } from "../../../lib/posts";
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({
+    params: { lang: post.lang, slug: post.slug },
+    props: { id: post.id },
+  }));
+}
+
+const lang = Astro.params.lang as Lang;
+const slug = Astro.params.slug!;
+const ui = t(lang);
+
+const post = (await getEntry("blog", Astro.props.id))!;
+const { Content } = await render(post);
+const { data } = post;
+
+// 번역이 존재하는 언어만 전환 대상이 된다
+const available = await getLangsForSlug(slug);
+const alternates = Object.fromEntries(
+  available.map((l) => [l, localePath(l, `blog/${slug}`)]),
+) as Partial<Record<Lang, string>>;
+
+const project = data.project ? await getEntry(data.project) : undefined;
+---
+
+<BaseLayout lang={lang} title={data.title} description={data.description} alternates={alternates}>
+  <article>
+    <h1>{data.title}</h1>
+    <p class="page-lead">{data.description}</p>
+
+    <div class="meta">
+      <span>
+        {ui.publishedAt}
+        <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt, lang)}</time>
+      </span>
+      {
+        data.updatedAt && (
+          <span>
+            {ui.updatedAt}
+            <time datetime={data.updatedAt.toISOString()}>{formatDate(data.updatedAt, lang)}</time>
+          </span>
+        )
+      }
+      <span>{POST_TYPE_LABELS[lang][data.type]}</span>
+    </div>
+
+    <div class="meta" style="margin-top:0.75rem">
+      <ul class="badges">
+        <li>
+          <a class="badge" data-kind="domain" href={localePath(lang, `domains/${data.domain}`)}>
+            {DOMAIN_LABELS[lang][data.domain]}
+          </a>
+        </li>
+        {
+          project && (
+            <li>
+              <a class="badge" href={localePath(lang, `projects/${project.id}`)}>
+                {project.data.name[lang]}
+              </a>
+            </li>
+          )
+        }
+        {
+          data.topics.map((topic) => (
+            <li>
+              <a class="badge" href={localePath(lang, `topics/${topic}`)}>
+                {topic}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {
+      available.length < LANGS.length && (
+        <p class="notice" style="margin-top:1.5rem">
+          {ui.translationMissing}
+        </p>
+      )
+    }
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,55 @@
+---
+import "../styles/global.css";
+import Header from "../components/Header.astro";
+import { t } from "../i18n/ui";
+import type { Lang } from "../i18n/taxonomy";
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description?: string;
+  /** 같은 내용의 다른 언어 URL — hreflang으로 신고한다 */
+  alternates?: Partial<Record<Lang, string>>;
+}
+
+const { lang, title, description, alternates = {} } = Astro.props;
+const ui = t(lang);
+const desc = description ?? ui.siteDescription;
+const fullTitle = title === ui.siteTitle ? title : `${title} — ${ui.siteTitle}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const hreflang: Record<Lang, string> = { ja: "ja-JP", ko: "ko-KR" };
+---
+
+<html lang={hreflang[lang]}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <link rel="canonical" href={canonical} />
+
+    {
+      Object.entries(alternates).map(([l, href]) => (
+        <link rel="alternate" hreflang={hreflang[l as Lang]} href={new URL(href, Astro.site)} />
+      ))
+    }
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={hreflang[lang].replace("-", "_")} />
+    <meta name="twitter:card" content="summary" />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+  </head>
+  <body>
+    <Header lang={lang} alternates={alternates} />
+    <main class="wrap">
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="wrap">© jovid18</div>
+    </footer>
+  </body>
+</html>

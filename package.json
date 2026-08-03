@@ -1,0 +1,17 @@
+{
+  "name": "jovid18-github-io",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "sync": "astro sync",
+    "i18n:status": "node scripts/translation-status.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^7.1.6"
+  }
+}

@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { LANGS, type Lang } from "../../../i18n/taxonomy";
+import { t } from "../../../i18n/ui";
+import { countByTopic, localePath } from "../../../lib/posts";
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang } }));
+}
+
+const lang = Astro.params.lang as Lang;
+const ui = t(lang);
+const topics = await countByTopic(lang);
+
+const alternates = Object.fromEntries(
+  LANGS.map((l) => [l, localePath(l, "topics")]),
+) as Record<Lang, string>;
+---
+
+<BaseLayout lang={lang} title={ui.nav.topics} alternates={alternates}>
+  <h1>{ui.nav.topics}</h1>
+  {
+    topics.length === 0 ? (
+      <p class="notice">{ui.noPosts}</p>
+    ) : (
+      <ul class="badges" style="margin-top:1.5rem">
+        {topics.map(([topic, count]) => (
+          <li>
+            <a class="badge" href={localePath(lang, `topics/${topic}`)}>
+              {topic} · {count}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</BaseLayout>
