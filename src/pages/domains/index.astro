@@ -1,31 +1,21 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { DOMAINS, DOMAIN_LABELS, LANGS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { countByDomain, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { DOMAINS, DOMAIN_LABELS } from "../../lib/taxonomy";
+import { UI } from "../../lib/ui";
+import { countByDomain, sitePath } from "../../lib/posts";
 
-export function getStaticPaths() {
-  return LANGS.map((lang) => ({ params: { lang } }));
-}
-
-const lang = Astro.params.lang as Lang;
-const ui = t(lang);
-const counts = await countByDomain(lang);
-
-const alternates = Object.fromEntries(
-  LANGS.map((l) => [l, localePath(l, "domains")]),
-) as Record<Lang, string>;
+const counts = await countByDomain();
 ---
 
-<BaseLayout lang={lang} title={ui.nav.domains} alternates={alternates}>
-  <h1>{ui.nav.domains}</h1>
+<BaseLayout title={UI.nav.domains}>
+  <h1>{UI.nav.domains}</h1>
   <ul class="axis-grid">
     {
       DOMAINS.map((domain) => (
         <li>
-          <a class="axis-card" href={localePath(lang, `domains/${domain}`)}>
-            <strong>{DOMAIN_LABELS[lang][domain]}</strong>
-            <small>{ui.postCount(counts.get(domain) ?? 0)}</small>
+          <a class="axis-card" href={sitePath(`domains/${domain}`)}>
+            <strong>{DOMAIN_LABELS[domain]}</strong>
+            <small>{UI.postCount(counts.get(domain) ?? 0)}</small>
           </a>
         </li>
       ))

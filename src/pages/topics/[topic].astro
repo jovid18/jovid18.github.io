@@ -1,36 +1,22 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import PostCard from "../../../components/PostCard.astro";
-import { LANGS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { getPosts, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { UI } from "../../lib/ui";
+import { getPosts } from "../../lib/posts";
 
 export async function getStaticPaths() {
-  const paths: Array<{ params: { lang: Lang; topic: string } }> = [];
-  for (const lang of LANGS) {
-    const topics = new Set((await getPosts(lang)).flatMap((p) => p.data.topics));
-    for (const topic of topics) paths.push({ params: { lang, topic } });
-  }
-  return paths;
+  const topics = new Set((await getPosts()).flatMap((p) => p.data.topics));
+  return [...topics].map((topic) => ({ params: { topic } }));
 }
 
-const lang = Astro.params.lang as Lang;
 const topic = Astro.params.topic!;
-const ui = t(lang);
-const posts = (await getPosts(lang)).filter((p) => p.data.topics.includes(topic));
-
-// 다른 언어에 같은 topic이 없을 수도 있다 — 그때는 전환 대상에서 빠진다
-const alternates: Partial<Record<Lang, string>> = {};
-for (const l of LANGS) {
-  const has = (await getPosts(l)).some((p) => p.data.topics.includes(topic));
-  if (has) alternates[l] = localePath(l, `topics/${topic}`);
-}
+const posts = (await getPosts()).filter((p) => p.data.topics.includes(topic));
 ---
 
-<BaseLayout lang={lang} title={topic} alternates={alternates}>
+<BaseLayout title={topic}>
   <h1>{topic}</h1>
-  <p class="page-lead">{ui.postCount(posts.length)}</p>
+  <p class="page-lead">{UI.postCount(posts.length)}</p>
   <ul class="post-list">
-    {posts.map((post) => <PostCard post={post} lang={lang} />)}
+    {posts.map((post) => <PostCard post={post} />)}
   </ul>
 </BaseLayout>

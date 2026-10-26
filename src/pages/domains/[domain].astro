@@ -1,35 +1,29 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import PostCard from "../../../components/PostCard.astro";
-import { DOMAINS, DOMAIN_LABELS, LANGS, type Domain, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { getPosts, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { DOMAINS, DOMAIN_LABELS, type Domain } from "../../lib/taxonomy";
+import { UI } from "../../lib/ui";
+import { getPosts } from "../../lib/posts";
 
 export function getStaticPaths() {
-  return LANGS.flatMap((lang) => DOMAINS.map((domain) => ({ params: { lang, domain } })));
+  return DOMAINS.map((domain) => ({ params: { domain } }));
 }
 
-const lang = Astro.params.lang as Lang;
 const domain = Astro.params.domain as Domain;
-const ui = t(lang);
-const label = DOMAIN_LABELS[lang][domain];
-const posts = (await getPosts(lang)).filter((p) => p.data.domain === domain);
-
-const alternates = Object.fromEntries(
-  LANGS.map((l) => [l, localePath(l, `domains/${domain}`)]),
-) as Record<Lang, string>;
+const label = DOMAIN_LABELS[domain];
+const posts = (await getPosts()).filter((p) => p.data.domain === domain);
 ---
 
-<BaseLayout lang={lang} title={label} alternates={alternates}>
+<BaseLayout title={label}>
   <h1>{label}</h1>
-  <p class="page-lead">{ui.postCount(posts.length)}</p>
+  <p class="page-lead">{UI.postCount(posts.length)}</p>
   {
     posts.length === 0 ? (
-      <p class="notice">{ui.noPosts}</p>
+      <p class="notice">{UI.noPosts}</p>
     ) : (
       <ul class="post-list">
         {posts.map((post) => (
-          <PostCard post={post} lang={lang} />
+          <PostCard post={post} />
         ))}
       </ul>
     )

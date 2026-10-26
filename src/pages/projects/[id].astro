@@ -1,56 +1,43 @@
 ---
-import { getCollection, getEntry } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import PostCard from "../../../components/PostCard.astro";
-import { LANGS, PROJECT_STATUS_LABELS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { getPosts, localePath } from "../../../lib/posts";
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { PROJECT_STATUS_LABELS } from "../../lib/taxonomy";
+import { UI } from "../../lib/ui";
+import { getPosts, type ProjectEntry } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const projects = await getCollection("projects");
-  return LANGS.flatMap((lang) => projects.map((p) => ({ params: { lang, id: p.id } })));
+  return projects.map((project) => ({ params: { id: project.id }, props: { project } }));
 }
 
-const lang = Astro.params.lang as Lang;
-const id = Astro.params.id!;
-const ui = t(lang);
-
-const project = (await getEntry("projects", id))!;
-const posts = (await getPosts(lang)).filter((p) => p.data.project?.id === id);
-
-const alternates = Object.fromEntries(
-  LANGS.map((l) => [l, localePath(l, `projects/${id}`)]),
-) as Record<Lang, string>;
+const { project } = Astro.props as { project: ProjectEntry };
+const posts = (await getPosts()).filter((p) => p.data.project?.id === project.id);
 ---
 
-<BaseLayout
-  lang={lang}
-  title={project.data.name[lang]}
-  description={project.data.description[lang]}
-  alternates={alternates}
->
-  <h1>{project.data.name[lang]}</h1>
-  <p class="page-lead">{project.data.description[lang]}</p>
+<BaseLayout title={project.data.name} description={project.data.description}>
+  <h1>{project.data.name}</h1>
+  <p class="page-lead">{project.data.description}</p>
 
   <div class="meta">
-    <span>{PROJECT_STATUS_LABELS[lang][project.data.status]}</span>
+    <span>{PROJECT_STATUS_LABELS[project.data.status]}</span>
     {
       project.data.repoUrl && (
         <a href={project.data.repoUrl} rel="noopener">
-          {ui.repository}
+          {UI.repository}
         </a>
       )
     }
   </div>
 
-  <h2>{ui.nav.posts}</h2>
+  <h2>{UI.nav.posts}</h2>
   {
     posts.length === 0 ? (
-      <p class="notice">{ui.noPosts}</p>
+      <p class="notice">{UI.noPosts}</p>
     ) : (
       <ul class="post-list">
         {posts.map((post) => (
-          <PostCard post={post} lang={lang} />
+          <PostCard post={post} />
         ))}
       </ul>
     )

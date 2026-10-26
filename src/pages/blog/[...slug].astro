@@ -1,68 +1,58 @@
 ---
 import { getEntry, render } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { DOMAIN_LABELS, POST_TYPE_LABELS, LANGS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { formatDate, getLangsForSlug, getPosts, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { DOMAIN_LABELS, POST_TYPE_LABELS } from "../../lib/taxonomy";
+import { UI } from "../../lib/ui";
+import { formatDate, getPosts, sitePath, type Post } from "../../lib/posts";
 
 export async function getStaticPaths() {
   const posts = await getPosts();
   return posts.map((post) => ({
-    params: { lang: post.lang, slug: post.slug },
-    props: { id: post.id },
+    params: { slug: post.id },
+    props: { post },
   }));
 }
 
-const lang = Astro.params.lang as Lang;
-const slug = Astro.params.slug!;
-const ui = t(lang);
-
-const post = (await getEntry("blog", Astro.props.id))!;
+const { post } = Astro.props as { post: Post };
 const { Content } = await render(post);
 const { data } = post;
-
-// 번역이 존재하는 언어만 전환 대상이 된다
-const available = await getLangsForSlug(slug);
-const alternates = Object.fromEntries(
-  available.map((l) => [l, localePath(l, `blog/${slug}`)]),
-) as Partial<Record<Lang, string>>;
 
 const project = data.project ? await getEntry(data.project) : undefined;
 ---
 
-<BaseLayout lang={lang} title={data.title} description={data.description} alternates={alternates}>
+<BaseLayout title={data.title} description={data.description}>
   <article>
     <h1>{data.title}</h1>
     <p class="page-lead">{data.description}</p>
 
     <div class="meta">
       <span>
-        {ui.publishedAt}
-        <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt, lang)}</time>
+        {UI.publishedAt}
+        <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time>
       </span>
       {
         data.updatedAt && (
           <span>
-            {ui.updatedAt}
-            <time datetime={data.updatedAt.toISOString()}>{formatDate(data.updatedAt, lang)}</time>
+            {UI.updatedAt}
+            <time datetime={data.updatedAt.toISOString()}>{formatDate(data.updatedAt)}</time>
           </span>
         )
       }
-      <span>{POST_TYPE_LABELS[lang][data.type]}</span>
+      <span>{POST_TYPE_LABELS[data.type]}</span>
     </div>
 
     <div class="meta" style="margin-top:0.75rem">
       <ul class="badges">
         <li>
-          <a class="badge" data-kind="domain" href={localePath(lang, `domains/${data.domain}`)}>
-            {DOMAIN_LABELS[lang][data.domain]}
+          <a class="badge" data-kind="domain" href={sitePath(`domains/${data.domain}`)}>
+            {DOMAIN_LABELS[data.domain]}
           </a>
         </li>
         {
           project && (
             <li>
-              <a class="badge" href={localePath(lang, `projects/${project.id}`)}>
-                {project.data.name[lang]}
+              <a class="badge" href={sitePath(`projects/${project.id}`)}>
+                {project.data.name}
               </a>
             </li>
           )
@@ -70,7 +60,7 @@ const project = data.project ? await getEntry(data.project) : undefined;
         {
           data.topics.map((topic) => (
             <li>
-              <a class="badge" href={localePath(lang, `topics/${topic}`)}>
+              <a class="badge" href={sitePath(`topics/${topic}`)}>
                 {topic}
               </a>
             </li>
@@ -78,14 +68,6 @@ const project = data.project ? await getEntry(data.project) : undefined;
         }
       </ul>
     </div>
-
-    {
-      available.length < LANGS.length && (
-        <p class="notice" style="margin-top:1.5rem">
-          {ui.translationMissing}
-        </p>
-      )
-    }
 
     <div class="prose">
       <Content />

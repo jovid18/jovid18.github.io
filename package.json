@@ -7,8 +7,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "sync": "astro sync",
-    "i18n:status": "node scripts/translation-status.mjs"
+    "sync": "astro sync"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

@@ -1,34 +1,33 @@
 ---
 import type { Post } from "../lib/posts";
-import { formatDate, localePath } from "../lib/posts";
-import { DOMAIN_LABELS, type Lang } from "../i18n/taxonomy";
+import { formatDate, sitePath } from "../lib/posts";
+import { DOMAIN_LABELS } from "../lib/taxonomy";
 
 interface Props {
   post: Post;
-  lang: Lang;
 }
 
-const { post, lang } = Astro.props;
+const { post } = Astro.props;
 const { data } = post;
 ---
 
 <li>
   <h2 class="post-card-title">
-    <a href={localePath(lang, `blog/${post.slug}`)}>{data.title}</a>
+    <a href={sitePath(`blog/${post.id}`)}>{data.title}</a>
   </h2>
   <p class="post-card-desc">{data.description}</p>
   <div class="meta">
-    <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt, lang)}</time>
+    <time datetime={data.publishedAt.toISOString()}>{formatDate(data.publishedAt)}</time>
     <ul class="badges">
       <li>
-        <a class="badge" data-kind="domain" href={localePath(lang, `domains/${data.domain}`)}>
-          {DOMAIN_LABELS[lang][data.domain]}
+        <a class="badge" data-kind="domain" href={sitePath(`domains/${data.domain}`)}>
+          {DOMAIN_LABELS[data.domain]}
         </a>
       </li>
       {
         data.topics.map((topic) => (
           <li>
-            <a class="badge" href={localePath(lang, `topics/${topic}`)}>
+            <a class="badge" href={sitePath(`topics/${topic}`)}>
               {topic}
             </a>
           </li>

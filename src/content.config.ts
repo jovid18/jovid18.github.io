@@ -1,14 +1,8 @@
 import { defineCollection, reference, z } from "astro:content";
 import { glob } from "astro/loaders";
-import { DOMAINS, POST_TYPES, PROJECT_STATUSES } from "./i18n/taxonomy";
+import { DOMAINS, POST_TYPES, PROJECT_STATUSES } from "./lib/taxonomy";
 
-/**
- * 글은 언어별 디렉토리에 같은 slug로 짝지어 둔다.
- *   src/content/blog/ko/proto-codegen.md   ← 원본
- *   src/content/blog/ja/proto-codegen.md   ← 번역본
- * glob 로더가 만드는 id가 "ko/proto-codegen" 형태라 언어와 slug를 id에서 그대로 뽑는다.
- * 별도의 짝지음 필드를 두면 두 파일이 서로 어긋날 여지가 생긴다.
- */
+/** 파일명이 곧 slug다 — src/content/blog/<slug>.md → /blog/<slug>/ */
 const blog = defineCollection({
   loader: glob({ base: "./src/content/blog", pattern: "**/*.md" }),
   schema: z.object({
@@ -36,8 +30,8 @@ const blog = defineCollection({
 const projects = defineCollection({
   loader: glob({ base: "./src/content/projects", pattern: "**/*.md" }),
   schema: z.object({
-    name: z.object({ ja: z.string(), ko: z.string() }),
-    description: z.object({ ja: z.string(), ko: z.string() }),
+    name: z.string(),
+    description: z.string(),
     status: z.enum(PROJECT_STATUSES),
     repoUrl: z.string().url().optional(),
     startedAt: z.coerce.date().optional(),

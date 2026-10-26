@@ -1,33 +1,22 @@
 ---
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import PostCard from "../../../components/PostCard.astro";
-import { LANGS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { getPosts, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import PostCard from "../../components/PostCard.astro";
+import { UI } from "../../lib/ui";
+import { getPosts } from "../../lib/posts";
 
-export function getStaticPaths() {
-  return LANGS.map((lang) => ({ params: { lang } }));
-}
-
-const lang = Astro.params.lang as Lang;
-const ui = t(lang);
-const posts = await getPosts(lang);
-
-const alternates = Object.fromEntries(
-  LANGS.map((l) => [l, localePath(l, "blog")]),
-) as Record<Lang, string>;
+const posts = await getPosts();
 ---
 
-<BaseLayout lang={lang} title={ui.allPosts} alternates={alternates}>
-  <h1>{ui.allPosts}</h1>
-  <p class="page-lead">{ui.postCount(posts.length)}</p>
+<BaseLayout title={UI.allPosts}>
+  <h1>{UI.allPosts}</h1>
+  <p class="page-lead">{UI.postCount(posts.length)}</p>
   {
     posts.length === 0 ? (
-      <p class="notice">{ui.noPosts}</p>
+      <p class="notice">{UI.noPosts}</p>
     ) : (
       <ul class="post-list">
         {posts.map((post) => (
-          <PostCard post={post} lang={lang} />
+          <PostCard post={post} />
         ))}
       </ul>
     )

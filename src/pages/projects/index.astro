@@ -1,37 +1,27 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import { LANGS, PROJECT_STATUS_LABELS, type Lang } from "../../../i18n/taxonomy";
-import { t } from "../../../i18n/ui";
-import { countByProject, localePath } from "../../../lib/posts";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { PROJECT_STATUS_LABELS } from "../../lib/taxonomy";
+import { UI } from "../../lib/ui";
+import { countByProject, sitePath } from "../../lib/posts";
 
-export function getStaticPaths() {
-  return LANGS.map((lang) => ({ params: { lang } }));
-}
-
-const lang = Astro.params.lang as Lang;
-const ui = t(lang);
 const projects = (await getCollection("projects")).sort(
   (a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id),
 );
-const counts = await countByProject(lang);
-
-const alternates = Object.fromEntries(
-  LANGS.map((l) => [l, localePath(l, "projects")]),
-) as Record<Lang, string>;
+const counts = await countByProject();
 ---
 
-<BaseLayout lang={lang} title={ui.nav.projects} alternates={alternates}>
-  <h1>{ui.nav.projects}</h1>
+<BaseLayout title={UI.nav.projects}>
+  <h1>{UI.nav.projects}</h1>
   <ul class="axis-grid">
     {
       projects.map((project) => (
         <li>
-          <a class="axis-card" href={localePath(lang, `projects/${project.id}`)}>
-            <strong>{project.data.name[lang]}</strong>
+          <a class="axis-card" href={sitePath(`projects/${project.id}`)}>
+            <strong>{project.data.name}</strong>
             <small>
-              {PROJECT_STATUS_LABELS[lang][project.data.status]} ·{" "}
-              {ui.postCount(counts.get(project.id) ?? 0)}
+              {PROJECT_STATUS_LABELS[project.data.status]} ·{" "}
+              {UI.postCount(counts.get(project.id) ?? 0)}
             </small>
           </a>
         </li>

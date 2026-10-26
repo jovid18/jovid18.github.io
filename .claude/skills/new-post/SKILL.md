@@ -1,14 +1,14 @@
 ---
 name: new-post
 description: >-
-  한국어 원본 글을 새로 만든다. 분류 축(분야·프로젝트·스택·유형)을 확정하고
-  frontmatter를 채운 뒤 src/content/blog/ko/<slug>.md 를 생성한다.
+  새 글을 만든다. 분류 축(분야·프로젝트·스택·유형)을 확정하고
+  frontmatter를 채운 뒤 src/content/blog/<slug>.md 를 생성한다.
   사용자가 "새 글", "글 쓸래", "글 만들어", "new post" 등을 말할 때 사용.
 ---
 
 # new-post
 
-한국어 원본 글의 껍데기를 만든다. **본문은 사용자가 쓴다** — 이 스킬은 slug과 분류를 정하는 데까지다.
+새 글의 껍데기를 만든다. **본문은 사용자가 쓴다** — 이 스킬은 slug과 분류를 정하는 데까지다.
 
 ## 절차
 
@@ -19,7 +19,7 @@ description: >-
    `dtw-scoring`, `jwt-vs-session`. **URL에 박히므로 발행 후 바꾸지 않는다** — 사용자에게
    확인받는다. 이미 같은 slug가 있으면 다른 이름을 제안한다.
 
-3. **분류 축 확정.** `src/i18n/taxonomy.ts`를 읽고 실제 값으로만 채운다.
+3. **분류 축 확정.** `src/lib/taxonomy.ts`를 읽고 실제 값으로만 채운다.
 
    - `domain` — **정확히 하나.** 걸치는 주제라도 하나를 고른다. 고르기 어려우면 "이 글을 찾는
      사람이 어느 분야를 뒤질까"로 판단한다. 어느 값도 안 맞으면 임의로 새 값을 쓰지 말고
@@ -32,7 +32,7 @@ description: >-
    - `type` — `concept`(개념을 파본 글) / `troubleshooting`(막힌 걸 뚫은 글) /
      `design`(설계 판단) / `memo`(짧은 기록).
 
-4. **파일 생성.** `src/content/blog/ko/<slug>.md`:
+4. **파일 생성.** `src/content/blog/<slug>.md`:
 
    ```markdown
    ---
@@ -52,10 +52,9 @@ description: >-
    리포가 public이므로 **초안이라도 push하면 소스는 읽힌다.** 완성 전에는 push하지 않도록 알린다.
 
 5. **보고.** 만든 경로, 확정한 분류, 그리고 `npm run dev`로 미리보기가 가능하다는 것을 알린다.
-   본문을 쓴 뒤 `draft: false`로 바꾸고 `/translate-post <slug>`로 번역하는 것이 다음 단계다.
+   본문을 쓴 뒤 `draft: false`로 바꾸는 것이 다음 단계다.
 
 ## 하지 말 것
 
 - 본문을 대신 쓰지 않는다. 사용자가 프로젝트에서 겪은 것을 쓰는 글이다.
 - 분류 값을 추측해서 새로 만들지 않는다. enum에 없는 값은 빌드를 세운다.
-- 일본어 파일(`ja/`)을 여기서 만들지 않는다 — `/translate-post`의 일이다.
