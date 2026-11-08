@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-20 -20 940 520" width="940" height="520" font-family="-apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif">
+  <defs>
+    <marker id="head" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#333333" />
+    </marker>
+    <marker id="head-red" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#D1242F" />
+    </marker>
+    <marker id="head-green" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#1A7F37" />
+    </marker>
+  </defs>
+
+  <!-- 다크 모드에서도 글씨가 보이도록 흰 배경을 깐다 -->
+  <rect x="-20" y="-20" width="940" height="520" fill="#FFFFFF" />
+
+  <!-- 참여자 -->
+  <g font-size="15" font-weight="700" fill="#222222" text-anchor="middle">
+    <rect x="0" y="0" width="160" height="50" rx="8" fill="#F5F5F5" stroke="#666666" />
+    <text x="80" y="30">철수</text>
+    <rect x="240" y="0" width="160" height="50" rx="8" fill="#FDECEC" stroke="#D1242F" />
+    <text x="320" y="30">운세앱 (악의적)</text>
+    <rect x="480" y="0" width="160" height="50" rx="8" fill="#F5F5F5" stroke="#666666" />
+    <text x="560" y="30">구글</text>
+    <rect x="720" y="0" width="160" height="50" rx="8" fill="#F5F5F5" stroke="#666666" />
+    <text x="800" y="30">채팅앱 서버</text>
+  </g>
+
+  <!-- 생명선 -->
+  <g stroke="#AAAAAA" stroke-dasharray="5 5">
+    <line x1="80" y1="50" x2="80" y2="420" />
+    <line x1="320" y1="50" x2="320" y2="420" />
+    <line x1="560" y1="50" x2="560" y2="420" />
+    <line x1="800" y1="50" x2="800" y2="420" />
+  </g>
+
+  <!-- 정상적인 운세앱 로그인 -->
+  <g stroke="#333333" stroke-width="1.5">
+    <line x1="80" y1="100" x2="320" y2="100" marker-end="url(#head)" />
+    <line x1="560" y1="170" x2="320" y2="170" marker-end="url(#head)" />
+  </g>
+
+  <!-- 운세앱이 남의 토큰을 들고 오는 구간 -->
+  <line x1="320" y1="240" x2="800" y2="240" stroke="#D1242F" stroke-width="2.5" marker-end="url(#head-red)" />
+
+  <!-- 채팅앱이 구글에 묻지 않고 토큰 자체를 검증한다 -->
+  <rect x="660" y="270" width="260" height="80" rx="6" fill="#F6F8FA" stroke="#666666" />
+  <g font-size="14" fill="#222222">
+    <text x="674" y="293" font-weight="700">④ ID Token 검증</text>
+    <text x="674" y="316">서명: 구글이 서명한 게 맞음 ✓</text>
+    <text x="674" y="339" fill="#D1242F" font-weight="700">aud: 운세앱 ≠ 채팅앱 ✗</text>
+  </g>
+
+  <!-- 거절 -->
+  <line x1="800" y1="390" x2="320" y2="390" stroke="#1A7F37" stroke-width="2.5" marker-end="url(#head-green)" />
+
+  <!-- 생명선 위를 지나는 라벨 뒤에 바탕을 깔아 글자가 끊겨 보이지 않게 한다 -->
+  <g fill="#FFFFFF">
+    <rect x="430" y="216" width="260" height="22" />
+    <rect x="500" y="366" width="120" height="22" />
+  </g>
+
+  <g font-size="14" fill="#222222" text-anchor="middle">
+    <text x="200" y="91">① 구글로 로그인</text>
+    <text x="440" y="142">② 철수의 ID Token</text>
+    <text x="440" y="161" font-size="13" fill="#555555">aud = 운세앱</text>
+  </g>
+  <g font-size="14" font-weight="700" text-anchor="middle">
+    <text x="560" y="231" fill="#D1242F">③ 철수의 ID Token으로 로그인 요청</text>
+    <text x="560" y="381" fill="#1A7F37">⑤ 로그인 거절</text>
+  </g>
+
+  <!-- 설명 -->
+  <text x="450" y="465" font-size="14" fill="#1A7F37" text-anchor="middle">토큰에 받을 앱이 적혀 있으니, 채팅앱이 직접 "내 것이 아니다"를 알아챈다</text>
+</svg>
