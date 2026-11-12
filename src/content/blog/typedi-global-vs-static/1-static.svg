@@ -1,0 +1,19 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='760' height='360' viewBox='0 0 760 360'><style>text{font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;fill:#1f2328}.m{font-family:Menlo,monospace;font-size:15px}.t{font-size:18px;font-weight:700}.b{font-size:16px;font-weight:700}.s{font-size:14px;fill:#59636e}</style><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9a6700"/></marker></defs><rect width='760' height='360' fill='#fff'/>
+<rect x="20" y="16" width="720" height="130" rx="12" fill="#eaeef2" stroke="#8c959f" stroke-width="2"/>
+<text x="38" y="42" class="t" style="fill:#57606a">Node 모듈 캐시</text><text x="178" y="42" class="s">typedi 컨테이너 밖 · 프로세스에 1개</text>
+<rect x="230" y="54" width="300" height="76" rx="10" fill="#fff8c5" stroke="#9a6700" stroke-width="2"/>
+<text x="380" y="84" text-anchor="middle" class="t">ApiClient 함수 객체</text>
+<text x="380" y="112" text-anchor="middle" class="m">static accessToken</text>
+<path d="M290 232 L320 134" stroke="#9a6700" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#a)"/>
+<path d="M470 232 L440 134" stroke="#9a6700" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#a)"/>
+<rect x="20" y="190" width="330" height="150" rx="12" fill="none" stroke="#0969da" stroke-width="2.5" stroke-dasharray="9 6"/>
+<text x="40" y="216" class="t" style="fill:#0969da">요청 A 컨테이너</text>
+<rect x="40" y="232" width="290" height="90" rx="10" fill="#ddf4ff" stroke="#0969da" stroke-width="2"/>
+<text x="60" y="266" class="b">ApiClient 인스턴스 A</text>
+<text x="60" y="300" class="m">context = A ✓</text>
+<rect x="410" y="190" width="330" height="150" rx="12" fill="none" stroke="#8250df" stroke-width="2.5" stroke-dasharray="9 6"/>
+<text x="720" y="216" text-anchor="end" class="t" style="fill:#8250df">요청 B 컨테이너</text>
+<rect x="430" y="232" width="290" height="90" rx="10" fill="#fbefff" stroke="#8250df" stroke-width="2"/>
+<text x="450" y="266" class="b">ApiClient 인스턴스 B</text>
+<text x="450" y="300" class="m">context = B ✓</text>
+</svg>

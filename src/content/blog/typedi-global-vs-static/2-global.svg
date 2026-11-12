@@ -1,0 +1,22 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='760' height='360' viewBox='0 0 760 360'><style>text{font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;fill:#1f2328}.m{font-family:Menlo,monospace;font-size:15px}.t{font-size:18px;font-weight:700}.b{font-size:16px;font-weight:700}.s{font-size:14px;fill:#59636e}</style>
+<defs><marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#0969da"/></marker><marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0L10 5L0 10z" fill="#cf222e"/></marker></defs>
+<rect width='760' height='360' fill='#fff'/>
+<rect x="20" y="16" width="720" height="130" rx="12" fill="none" stroke="#1a7f37" stroke-width="2.5" stroke-dasharray="9 6"/>
+<text x="38" y="42" class="t" style="fill:#1a7f37">typedi 전역 컨테이너</text><text x="222" y="42" class="s">프로세스에 1개</text>
+<rect x="190" y="50" width="380" height="86" rx="10" fill="#ddf4ff" stroke="#0969da" stroke-width="2"/>
+<text x="210" y="78" class="b">ApiClient 인스턴스 1개</text>
+<text x="210" y="104" class="m">this.accessToken</text>
+<text x="210" y="126" class="m" style="fill:#cf222e">context = A (고정)</text>
+<rect x="20" y="190" width="330" height="150" rx="12" fill="none" stroke="#0969da" stroke-width="2.5" stroke-dasharray="9 6"/>
+<text x="40" y="216" class="t" style="fill:#0969da">요청 A 컨테이너</text>
+<rect x="40" y="232" width="290" height="90" rx="10" fill="none" stroke="#afb8c1" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="60" y="266" class="s">인스턴스 없음 · 위의 것을 참조</text>
+<text x="60" y="302" class="b" style="fill:#1a7f37">requestId = A ✓</text>
+<rect x="410" y="190" width="330" height="150" rx="12" fill="none" stroke="#8250df" stroke-width="2.5" stroke-dasharray="9 6"/>
+<text x="720" y="216" text-anchor="end" class="t" style="fill:#8250df">요청 B 컨테이너</text>
+<rect x="430" y="232" width="290" height="90" rx="10" fill="none" stroke="#afb8c1" stroke-width="2" stroke-dasharray="4 4"/>
+<text x="450" y="266" class="s">인스턴스 없음 · 위의 것을 참조</text>
+<text x="450" y="302" class="b" style="fill:#cf222e">requestId = A ✗</text>
+<path d="M290 232 L320 140" stroke="#0969da" stroke-width="2.5" fill="none" marker-end="url(#b)"/>
+<path d="M470 232 L440 140" stroke="#cf222e" stroke-width="2.5" stroke-dasharray="6 5" fill="none" marker-end="url(#r)"/>
+</svg>
